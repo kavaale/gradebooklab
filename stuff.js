@@ -1,5 +1,7 @@
 $(function () {
     $("form").submit(submitGrade);
+    $("#sortPer").click(sortGrade);
+    $("#sortName").click(sortName);
 
     var objectStore = [];
 
@@ -18,7 +20,10 @@ $(function () {
         grades.earned = $("#earned").val();
         grades.possible = $("#possible").val();
 
-        var percentage = grades.earned/grades.possible;
+        objectStore.push(grades);
+        displayArray();
+
+        /*var percentage = grades.earned/grades.possible;
 
         console.log("First Name: " + grades.fName);
         console.log("Last Name: " + grades.lName);
@@ -37,6 +42,54 @@ $(function () {
         }
         else {
             console.log("Grade Earned: F")
+        }*/
+    }
+
+    function sortGrade(event){
+        event.preventDefault();
+        objectStore.sort(sortByGrade);
+        displayArray()
+    }
+
+    function sortName(event){
+        event.preventDefault();
+        objectStore.sort(sortByName);
+        displayArray();
+    }
+
+    function sortByGrade(x, y){
+        var xPerc = x.earned/x.possible;
+        var yPerc = y.earned/y.possible;
+        if(xPerc<yPerc){
+            return -1;
+        }
+        else if(xPerc>yPerc){
+            return 1;
+        }
+        else{
+            return 0;
         }
     }
+    function sortByName(x, y){
+        if(x.fName<y.fName){
+            return -1;
+        }
+        else if(x.fName>y.fName){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    function displayArray(){
+        $("#outputText").empty();
+        var i = 0;
+        while (i < objectStore.length){
+            $("#outputText").append("<p>Name: " + objectStore[i].fName + " " + objectStore[i].lName + "</p>" +
+                "<p>Grade: " + objectStore[i].earned/objectStore[i].possible*100 + "%</p><br>");
+            i++;
+        }
+    }
+
 })
